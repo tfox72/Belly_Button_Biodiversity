@@ -36,19 +36,14 @@ inspector = inspect(engine)
 
 app = Flask(__name__)
 
-@app.route("/")
-def home():
-    return render_template("index.html")
-
-
 @app.route("/names")
 def names():
     results = session.query(samples_metadata.SAMPLEID).all()
-    names =  list(np.ravel(results))
+    names = list(np.ravel(results))
     for index in range(len(names)):
-        names[index]= "BB_" + str(names[index])
-        print(names)
-        return jsonify(names)
+        names[index] = "BB_" + str(names[index])
+    print(names)
+    return jsonify(names)
 
 @app.route("/metadata/<sample>")
 def metadata(sample):
@@ -68,27 +63,27 @@ def metadata(sample):
     return jsonify(metadata_dict)
 
 
-@app.route("/piechart/<sample>")
+@app.route('/piechart/<sample>')
 def pie_chart(sample):
-    samples_df = pd.read_sql_table('samples',session.bind)
-    samples_df = samples_df.loc[:,['otu_id', sample]].sort_values(sample,ascending=False)
-    otu_ids_sorted = list(samples_df.iloc[:10,0])
-    samples_sorted = list(samples_df.iloc[:10,1])
+    # get sample values and otuIDs
+    samples_df = pd.read_sql_table('samples', session.bind)
+    sample_df = samples_df.loc[:, ['otu_id', sample]].sort_values(sample, ascending=False)
+    otu_ids_sorted = list(sample_df.iloc[:10, 0])
+    samples_sorted = list(sample_df.iloc[:10, 1])
 
-    #descriptions
+    # get otu descriptions
     results = session.query(otus.lowest_taxonomic_unit_found).all()
     otu_descriptions = list(np.ravel(results))
-    otu_descriptions_sorted= []
-    for i in range(len(otu_descriptions_sorted)):
-        otu_id = otu_descriptions_sorted[i]
+    otu_descriptions_sorted = []
+    for index in range(len(otu_ids_sorted)):
+        otu_id = otu_ids_sorted[index]
         otu_descriptions_sorted.append(otu_descriptions[otu_id])
+
+   #build response object
+    response_object = {'otu_ids': otu_ids_sorted,'sample_values': samples_sorted,'otu_descriptions' : otu_descriptions_sorted}
     
-    #response object
-    response_object = {'otu_ids': otu_ids_sorted, 'sample_values':samples_sorted,'otu_descriptions':otu_descriptions_sorted}
-
-    #return the response object
+    #return response object
     return jsonify(response_object)
-
 
 @app.route("/wfreq/<sample>")
 def wfreq(sample):
@@ -101,6 +96,9 @@ def wfreq(sample):
     print(wfreq)
     return(wfreq)
 
+@app.route("/")
+def home():
+    return render_template("index.html")
 
 
 
