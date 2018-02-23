@@ -28,7 +28,7 @@
             <div class="row">
                  <div class="jumbotron bg-secondary text-white" id="jumbotron_metadata">
                     <p class="text-center">Select Sample:</p>
-                        <select id="datasetSelect" onchange="switchChanged(this.value)"></select>
+                        <select id="datasetSelect" onchange="optionChanged(this.value)"></select>
                 </div>  
             </div>
         </div>
@@ -45,7 +45,19 @@
         <div id="pieChart" width="90%"></div>
     </div>
 
-    <script src="{{url_for('static', filename='app.js') }}"></script>
+
+    <div class="col-sm-6 col-md-12 col-lg-12 col-xl-12">
+        <div id="gauge" width="90%"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6 col-md-12 col-lg-12 col-xl-12">
+         <div id="bubbleChart" ,max-width="100%" ,height="auto"></div>
+        </div>
+    </div>
+
+
+    <script src="{{url_for('static', filename='js/app.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

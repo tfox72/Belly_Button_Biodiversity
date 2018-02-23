@@ -14,6 +14,8 @@ from flask import(
     jsonify
 )
 
+
+
 #Setup the DB
 engine = create_engine("sqlite:///data/belly_button_biodiversity.sqlite")
 
@@ -62,7 +64,6 @@ def metadata(sample):
     print(metadata_dict)
     return jsonify(metadata_dict)
 
-
 @app.route('/piechart/<sample>')
 def pie_chart(sample):
     # get sample values and otuIDs
@@ -85,16 +86,40 @@ def pie_chart(sample):
     #return response object
     return jsonify(response_object)
 
-@app.route("/wfreq/<sample>")
+@app.route('/wfreq/<sample>')
 def wfreq(sample):
     wfreq = 0
     sample_id = sample.split('_')[1]
     print(sample_id)
-    results = session.query(samples_metadata).filter(samples_metadata.SAMPLEID==sample_id).all()
+    results = session.query(samples_metadata).filter(
+        samples_metadata.SAMPLEID == sample_id).all()
     for sample in results:
-        wfreq =  sample.WFREQ
+        wfreq = sample.WFREQ
     print(wfreq)
-    return(wfreq)
+    return wfreq
+
+@app.route('/bubblechart/<sample>')
+def bubble_chart(sample):
+    # get otu descriptions
+    results = session.query(otus.lowest_taxonomic_unit_found).all()
+    otu_descriptions = list(np.ravel(results))
+
+    # get sample values and otuIDs
+    samples_df = pd.read_sql_table('samples', session.bind)
+    samples_df ['otu_descriptions'] = pd.Series(otu_descriptions)
+    sample_df = samples_df.loc[:, ['otu_id', sample,'otu_descriptions']].sort_values(sample, ascending=False)
+    otu_ids_sorted = list(sample_df.iloc[:, 0])
+    samples_sorted = list(sample_df.iloc[:, 1])
+    otu_descriptions_sorted = list(sample_df.iloc[:,2])
+
+   #build response object
+    response_object = {'otu_ids': otu_ids_sorted,'sample_values': samples_sorted,'otu_descriptions' : otu_descriptions_sorted}
+    
+    #return response object
+    return jsonify(response_object)
+
+
+
 
 @app.route("/")
 def home():
@@ -103,4 +128,4 @@ def home():
 
 
 if __name__ =='__main__':
-    app.run()
+    app.run(debug=True)
