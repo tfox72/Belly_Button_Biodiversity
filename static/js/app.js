@@ -78,7 +78,6 @@ function renderGauge(wfreq) {
     var x = radius * Math.cos(radians);
     var y = radius * Math.sin(radians);
 
-    // Path: may have to change to create a better triangle
     var mainPath = 'M -.0 -0.025 L .0 0.025 L ',
         pathX = String(x),
         space = ' ',

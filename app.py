@@ -64,11 +64,12 @@ def metadata(sample):
     print(metadata_dict)
     return jsonify(metadata_dict)
 
-@app.route('/piechart/<sample>')
+@app.route("/piechart/<sample>")
 def pie_chart(sample):
     # get sample values and otuIDs
     samples_df = pd.read_sql_table('samples', session.bind)
     sample_df = samples_df.loc[:, ['otu_id', sample]].sort_values(sample, ascending=False)
+    samples_df = sample_df.astype(int)
     otu_ids_sorted = list(sample_df.iloc[:10, 0])
     samples_sorted = list(sample_df.iloc[:10, 1])
 
@@ -81,7 +82,7 @@ def pie_chart(sample):
         otu_descriptions_sorted.append(otu_descriptions[otu_id])
 
    #build response object
-    response_object = {'otu_ids': otu_ids_sorted,'sample_values': samples_sorted,'otu_descriptions' : otu_descriptions_sorted}
+    response_object = {'otu_ids': otu_ids_sorted,'sample_values': samples_sorted,'otu_descriptions' : strotu_descriptions_sorted)}
     
     #return response object
     return jsonify(response_object)
@@ -102,15 +103,15 @@ def wfreq(sample):
 def bubble_chart(sample):
     # get otu descriptions
     results = session.query(otus.lowest_taxonomic_unit_found).all()
-    otu_descriptions = list(np.ravel(results))
+    otu_descriptions = int(list(np.ravel(results)))
 
     # get sample values and otuIDs
     samples_df = pd.read_sql_table('samples', session.bind)
     samples_df ['otu_descriptions'] = pd.Series(otu_descriptions)
     sample_df = samples_df.loc[:, ['otu_id', sample,'otu_descriptions']].sort_values(sample, ascending=False)
-    otu_ids_sorted = list(sample_df.iloc[:, 0])
-    samples_sorted = list(sample_df.iloc[:, 1])
-    otu_descriptions_sorted = list(sample_df.iloc[:,2])
+    otu_ids_sorted = int(list(sample_df.iloc[:, 0]))
+    samples_sorted = int(list(sample_df.iloc[:, 1]))
+    otu_descriptions_sorted = int(list(sample_df.iloc[:,2]))
 
    #build response object
     response_object = {'otu_ids': otu_ids_sorted,'sample_values': samples_sorted,'otu_descriptions' : otu_descriptions_sorted}
