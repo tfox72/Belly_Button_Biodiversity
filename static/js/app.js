@@ -53,7 +53,7 @@ function addMetadata(metadataDict) {
     Sample ID: ${metadataDict.SAMPLEID}<br>`  
 }
 
-function renderPieChart(responseDict) {
+function renderPieChart(responseDict = {}) {
     var data = [{
         values: responseDict.sample_values,
         labels: responseDict.otu_ids,

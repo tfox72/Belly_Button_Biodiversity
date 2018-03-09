@@ -82,7 +82,7 @@ def pie_chart(sample):
         otu_descriptions_sorted.append(otu_descriptions[otu_id])
 
    #build response object
-    response_object = {'otu_ids': otu_ids_sorted,'sample_values': samples_sorted,'otu_descriptions' : strotu_descriptions_sorted)}
+    response_object = {'otu_ids': otu_ids_sorted,'sample_values': samples_sorted,'otu_descriptions' : otu_descriptions_sorted}
     
     #return response object
     return jsonify(response_object)
